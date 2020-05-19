@@ -16,6 +16,9 @@ def borrow_book():
 def return_book():
     pass
 
+def logout():
+    pass
+
 def command_list():
     # 用户选择功能
     user_command = input("""
