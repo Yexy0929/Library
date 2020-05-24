@@ -1,55 +1,112 @@
-def view_book():
-    with open('book.txt', 'r', encoding='UTF-8') as f:
-        book = f.read()
-        print(book)
+books_list = []
+
 
 def add_book():
-    name = input("请输入书名：")
-    author = input("请输入作者：")
-    price = input("请输入价格：")
-    with open('book.txt', 'a', encoding='UTF-8') as f:
-        f.write('\n《' + name + '》,'+ '作者：' + author + ',' + price + ',' + '状态：未借出')
+    print('*********添加图书**********')
+    name = input('请输入书名：')
+    if len(name) <= 16:
+        author = input('请输入作者：')
+        price = input('请输入价格：')
+        if price == range(1, 5001):
+            status = input('请输入状态：')
+            if status == '未借出' or '已借出':
+                book = (name, author, price, status)
+                books_list.append(book)
+            else:
+                print("状态只能是'已借出'或者'未借出'")
+                add_book()
+        else:
+            print('价格不能超过5000')
+            add_book()
+    else:
+        print('书名不能超过16个字，请重新输入')
+        add_book()
+
+
+def query_book():
+    print('当前图书馆有以下图书：')
+    for x in range(0, len(books_list)):
+        books = books_list[x]
+        name = books[0]
+        author = books[1]
+        price = books[2]
+        status = books[3]
+        print('序号：%s 书名：%s 作者：%s 价格：%s 状态：%s' % (x, name, author, price, status))
+
 
 def borrow_book():
-    pass
+    name = input('请输入书名：')
+    for books in books_list:
+        if books[0] == name and books[3] == '已借出':
+            index = books_list.index(books, 0, len(books_list))
+            print('序号：%s 书名：%s 作者：%s 价格：%s 状态：%s' % (
+                index, books_list[index][0], books_list[index][1], books_list[index][2],
+                books_list[index][3]))
+            choice = input('请确认图书信息是否正确')
+            if choice == 'y':
+                books[3] = '已借出'
+                print('借书成功')
+        else:
+            print('此书已借出')
+
 
 def return_book():
-    pass
-
-def logout():
-    pass
-
-def command_list():
-    # 用户选择功能
-    user_command = input("""
-        欢迎使用图书馆管理系统,请输入序号选择功能:
-        1. 查看图书
-        2. 登记图书
-        3. 借出图书
-        4. 归还图书
-        5. 退出系统
-        """
-                         )
-    while True:
-        if user_command == "1":
-            view_book()
-            break
-        elif user_command == "2":
-            add_book()
-            break
-        elif user_command == "3":
-            print("请输入您要借的书名：")
-            break
-        elif user_command == "4":
-            print("请输入您要归还的图书名：")
-            break
-        elif user_command == "5":
-            print("退出成功，感谢您的使用！")
-            break
-        else:
-            print("序号不存在，请输入正确的序号选择功能。")
-            break
+    name = input('请输入书名：')
+    for books in books_list:
+        if books[0] == name:
+            index = books_list.index(books, 0, len(books_list))
+            print('序号：%s 书名：%s 作者：%s 价格：%s 状态：%s' % (
+                index, books_list[index][0], books_list[index][1], books_list[index][2],
+                books_list[index][3]))
+            choice = input('请确认图书信息是否正确')
+            if choice == 'y':
+                books[3] = '未借出'
+                print('还书成功')
 
 
-if __name__ == "__main__":
-    command_list()
+# 存储至本地文件
+def save_data():
+    file_handle = open('book.txt', 'w', encoding='utf-8')
+    for book in books_list:
+        # 把列表中的数据用空格分开拼接为一个字符串
+        s = ' '.join(book)
+        file_handle.write(s)
+        file_handle.write('\n')
+    file_handle.close()
+
+
+def read_data():
+    file_handle = open('book.txt', mode='r', encoding='utf-8')
+    contents = file_handle.readlines()
+    for msg in contents:
+        msg = msg.strip('\n')
+        books = msg.split(' ')
+        books_list.append(books)
+    file_handle.close()
+
+
+read_data()
+while True:
+    print('****************图书管理系统*****************')
+    print('*****************1.查看图书*****************')
+    print('*****************2.登记图书*****************')
+    print('*****************3.借出图书*****************')
+    print('*****************4.归还图书*****************')
+    print('*****************5.退出系统*****************')
+    choose = int(input('请选择你的操作：'))
+    if choose == 1:
+        query_book()
+    elif choose == 2:
+        add_book()
+        save_data()
+    elif choose == 3:
+        borrow_book()
+        save_data()
+    elif choose == 4:
+        return_book()
+        save_data()
+    elif choose == 5:
+        print('再见，欢迎下次使用')
+        break
+    else:
+        print('您的选项不存在，请重新选择')
