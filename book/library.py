@@ -7,16 +7,13 @@ def add_book():
     if len(name) <= 16:
         author = input('请输入作者：')
         price = input('请输入价格：')
-        if price == range(1, 5001):
-            status = input('请输入状态：')
-            if status == '未借出' or '已借出':
-                book = (name, author, price, status)
-                books_list.append(book)
-            else:
-                print("状态只能是'已借出'或者'未借出'")
-                add_book()
+        status = input('请输入状态：')
+        if status == '未借出' or '已借出':
+            book = (name, author, price, status)
+            books_list.append(book)
+            save_data()
         else:
-            print('价格不能超过5000')
+            print("状态只能是'已借出'或者'未借出'")
             add_book()
     else:
         print('书名不能超过16个字，请重新输入')
@@ -37,7 +34,7 @@ def query_book():
 def borrow_book():
     name = input('请输入书名：')
     for books in books_list:
-        if books[0] == name and books[3] == '已借出':
+        if books[0] == name:
             index = books_list.index(books, 0, len(books_list))
             print('序号：%s 书名：%s 作者：%s 价格：%s 状态：%s' % (
                 index, books_list[index][0], books_list[index][1], books_list[index][2],
@@ -46,8 +43,6 @@ def borrow_book():
             if choice == 'y':
                 books[3] = '已借出'
                 print('借书成功')
-        else:
-            print('此书已借出')
 
 
 def return_book():
@@ -98,10 +93,8 @@ while True:
         query_book()
     elif choose == 2:
         add_book()
-        save_data()
     elif choose == 3:
         borrow_book()
-        save_data()
     elif choose == 4:
         return_book()
         save_data()
