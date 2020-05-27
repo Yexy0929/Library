@@ -68,11 +68,9 @@ def return_book():
                 save_data()
 
 
-# 存储至本地文件
 def save_data():
     file_handle = open('book.txt', 'w', encoding='utf-8')
     for book in books_list:
-        # 把列表中的数据用空格分开拼接为一个字符串
         s = ' '.join(book)
         file_handle.write(s)
         file_handle.write('\n')
