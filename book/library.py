@@ -1,3 +1,12 @@
+class Book:
+
+    def __init__(self, name, author, price, status):
+        self.name = name
+        self.author = author
+        self.price = price
+        self.status = status
+
+
 books_list = []
 
 
@@ -7,7 +16,8 @@ def add_book():
     if len(name) <= 16:
         author = input('请输入作者：')
         price = input('请输入价格：')
-        book = (name, author, price, '未借出')
+        books = Book(name, author, price, '未借出')
+        book = (books.name, books.author, books.price, books.status)
         books_list.append(book)
         save_data()
         print('新书保存成功：书名：%s 作者：%s 价格：%s' % (name, author, price))
