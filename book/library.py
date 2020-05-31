@@ -52,78 +52,83 @@ def query_book():
 # 借书
 def borrow_book():
     print('======借书======')
-    name = input('请输入书名：')
-    for books in books_list:
-        if books[0] == name:
-            index = books_list.index(books, 0, len(books_list))
-            if books_list[index][3] == '未借出':
-                print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
-                    index, books_list[index][0], books_list[index][1], books_list[index][2],
-                    books_list[index][3]))
-                print('y：确认借书，n：重新输入，b：退出借书')
-                choice = input('输入你的选项：')
-                if choice == 'y':
-                    books[3] = '已借出'
-                    print('借书成功')
-                    save_data()
-                elif choice == 'n':
-                    print('请重新输入书名借书')
-                    borrow_book()
-                elif choice == 'b':
-                    manage_book()
-                else:
-                    print('没有该选项')
-            elif books_list[index][3] == '已借出':
-                print('该图书已借出')
+    index = find_book()
+    if books_list[index][3] == '未借出':
+        print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
+            index, books_list[index][0], books_list[index][1], books_list[index][2],
+            books_list[index][3]))
+        print('y：确认借书，n：重新输入，b：退出借书')
+        choice = input('输入你的选项：')
+        if choice == 'y':
+            books_list[index][3] = '已借出'
+            print('借书成功')
+            save_data()
+        elif choice == 'n':
+            print('请重新输入书名借书')
+            borrow_book()
+        elif choice == 'b':
+            manage_book()
+        else:
+            print('没有该选项')
+    elif books_list[index][3] == '已借出':
+        print('该图书已借出')
 
 
 # 还书
 def return_book():
     print('======还书======')
+    index = find_book()
+    if books_list[index][3] == '已借出':
+        print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
+            index, books_list[index][0], books_list[index][1], books_list[index][2],
+            books_list[index][3]))
+        print('y：确认还书，n：重新输入，b：退出还书')
+        choice = input("输入你的选项：")
+        if choice == 'y':
+            books_list[index][3] = '未借出'
+            print('还书成功')
+            save_data()
+        elif choice == 'n':
+            print('请重新输入书名还书')
+            return_book()
+        elif choice == 'b':
+            manage_book()
+        else:
+            print('没有该选项')
+    elif books_list[index][3] == '未借出':
+        print('该图书未借出')
+
+
+# 根据书名查找图书
+def find_book():
     name = input('请输入书名：')
-    for books in books_list:
-        if books[0] == name:
-            index = books_list.index(books, 0, len(books_list))
-            if books_list[index][3] == '已借出':
-                print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
-                    index, books_list[index][0], books_list[index][1], books_list[index][2],
-                    books_list[index][3]))
-                print('y：确认还书，n：重新输入，b：退出还书')
-                choice = input("输入你的选项：")
-                if choice == 'y':
-                    books[3] = '未借出'
-                    print('还书成功')
-                    save_data()
-                elif choice == 'n':
-                    print('请重新输入书名还书')
-                    return_book()
-                elif choice == 'b':
-                    manage_book()
-                else:
-                    print('没有该选项')
-            elif books_list[index][3] == '未借出':
-                print('该图书未借出')
+    while True:
+        rs = False
+        for book in books_list:
+            if book[0] == name:
+                index = books_list.index(book, 0, len(books_list))
+                return index
+        if rs == False:
+            name = input('未找到图书，请重输：')
 
 
 # 保存数据到txt文件
 def save_data():
-    file_handle = open('book.txt', 'w', encoding='utf-8')
-    for book in books_list:
-        s = ' '.join(book)
-        file_handle.write(s)
-        file_handle.write('\n')
-    file_handle.close()
+    with open('book.txt', 'w', encoding='utf-8') as f:
+        for book in books_list:
+            s = ' '.join(book)
+            f.write(s)
+            f.write('\n')
 
 
 # 读取txt文件里面的数据
 def read_data():
-    file_handle = open('book.txt', mode='r', encoding='utf-8')
-    contents = file_handle.readlines()
-    for msg in contents:
-        msg = msg.strip('\n')
-        books = msg.split(' ')
-        books_list.append(books)
-    file_handle.close()
+    with open('book.txt', 'r', encoding='utf-8') as f:
+        contents = f.readlines()
+        for s in contents:
+            s = s.strip('\n')
+            books = s.split(' ')
+            books_list.append(books)
 
 
 # 选择操作
@@ -148,7 +153,7 @@ def manage_book():
                 return_book()
             elif choose == 5:
                 print('再见，欢迎下次使用')
-                break
+                exit()
             else:
                 print('您的选项不存在，请重新选择')
         except ValueError:
