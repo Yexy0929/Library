@@ -24,7 +24,7 @@ def add_book():
                 book = (books.name, books.author, books.price, books.status)
                 books_list.append(book)
                 save_data()
-                print('新书登记成功：书名：《%s》 作者：%s 价格：%s' % (name, author, price))
+                print('新书登记成功：\n书名：《%s》 作者：%s 价格：%s' % (name, author, price))
             else:
                 print('图书价格范围0-5000，请重新登记图书信息')
                 add_book()
@@ -54,21 +54,27 @@ def borrow_book():
     print('======借书======')
     name = input('请输入书名：')
     for books in books_list:
-        if books[0] == name and books[3] == '未借出':
+        if books[0] == name:
             index = books_list.index(books, 0, len(books_list))
-            print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
-                index, books_list[index][0], books_list[index][1], books_list[index][2],
-                books_list[index][3]))
-            choice = input("请确认图书信息，'y'确认借书，'n'重新输入，'b'退出借书")
-            if choice == 'y':
-                books[3] = '已借出'
-                print('借书成功')
-                save_data()
-            elif choice == 'n':
-                print('请重新输入书名借书')
-                borrow_book()
-            elif choice == 'b':
-                manage_book()
+            if books_list[index][3] == '未借出':
+                print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
+                    index, books_list[index][0], books_list[index][1], books_list[index][2],
+                    books_list[index][3]))
+                print("y：确认借书，n：重新输入，b：退出借书")
+                choice = input("输入你的选项：")
+                if choice == 'y':
+                    books[3] = '已借出'
+                    print('借书成功')
+                    save_data()
+                elif choice == 'n':
+                    print('请重新输入书名借书')
+                    borrow_book()
+                elif choice == 'b':
+                    manage_book()
+                else:
+                    print('没有该选项')
+            elif books_list[index][3] == '已借出':
+                print('该图书已借出')
 
 
 # 还书
@@ -76,21 +82,27 @@ def return_book():
     print('======还书======')
     name = input('请输入书名：')
     for books in books_list:
-        if books[0] == name and books[3] == '已借出':
+        if books[0] == name:
             index = books_list.index(books, 0, len(books_list))
-            print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
-                index, books_list[index][0], books_list[index][1], books_list[index][2],
-                books_list[index][3]))
-            choice = input("请确认图书信息，'y'确认还书，'n'重新输入，'b'退出还书")
-            if choice == 'y':
-                books[3] = '未借出'
-                print('还书成功')
-                save_data()
-            elif choice == 'n':
-                print('请重新输入书名还书')
-                return_book()
-            elif choice == 'b':
-                manage_book()
+            if books_list[index][3] == '已借出':
+                print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
+                    index, books_list[index][0], books_list[index][1], books_list[index][2],
+                    books_list[index][3]))
+                print("y：确认还书，n：重新输入，b：退出还书")
+                choice = input("输入你的选项：")
+                if choice == 'y':
+                    books[3] = '未借出'
+                    print('还书成功')
+                    save_data()
+                elif choice == 'n':
+                    print('请重新输入书名还书')
+                    return_book()
+                elif choice == 'b':
+                    manage_book()
+                else:
+                    print('没有该选项')
+            elif books_list[index][3] == '未借出':
+                print('该图书未借出')
 
 
 # 保存数据到txt文件
