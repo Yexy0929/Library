@@ -60,8 +60,8 @@ def borrow_book():
                 print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
                     index, books_list[index][0], books_list[index][1], books_list[index][2],
                     books_list[index][3]))
-                print("y：确认借书，n：重新输入，b：退出借书")
-                choice = input("输入你的选项：")
+                print('y：确认借书，n：重新输入，b：退出借书')
+                choice = input('输入你的选项：')
                 if choice == 'y':
                     books[3] = '已借出'
                     print('借书成功')
@@ -88,7 +88,7 @@ def return_book():
                 print('序号：%s 书名：《%s》 作者：%s 价格：%s 状态：%s' % (
                     index, books_list[index][0], books_list[index][1], books_list[index][2],
                     books_list[index][3]))
-                print("y：确认还书，n：重新输入，b：退出还书")
+                print('y：确认还书，n：重新输入，b：退出还书')
                 choice = input("输入你的选项：")
                 if choice == 'y':
                     books[3] = '未借出'
