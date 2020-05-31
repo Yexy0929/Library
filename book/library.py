@@ -12,7 +12,7 @@ books_list = []
 
 # 登记新书
 def add_book():
-    print('======添加图书======')
+    print('======登记新书======')
     name = input('请输入书名：')
     if len(name) <= 16:
         author = input('请输入作者：')
